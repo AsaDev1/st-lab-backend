@@ -6,11 +6,8 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-}));
+app.use(cors()); 
+
 
 const USER = {
   username: 'admin',
