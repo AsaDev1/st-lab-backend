@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const serverless = require('serverless-http');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(cors());
 
 const USER = {
@@ -13,7 +13,6 @@ const USER = {
   password: '1234'
 };
 
-// POST /login - returns a token if correct
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (username === USER.username && password === USER.password) {
@@ -22,7 +21,6 @@ app.post('/login', (req, res) => {
   res.status(401).json({ message: 'Invalid credentials' });
 });
 
-// GET /dashboard - requires a token
 app.get('/dashboard', (req, res) => {
   const authHeader = req.headers.authorization;
   if (authHeader === 'Bearer abc123') {
@@ -31,5 +29,9 @@ app.get('/dashboard', (req, res) => {
   res.status(403).json({ message: 'Unauthorized access' });
 });
 
-// Export for Vercel serverless
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: 'Something went wrong' });
+});
+
 module.exports = serverless(app);
