@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: express-login-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
